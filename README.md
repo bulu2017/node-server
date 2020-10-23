@@ -95,5 +95,23 @@ yarn start
 >     yarn add formidable 
 >     ```
 >
-> 15. 
+> 15. **moment** ——  日期处理类库
+>
+>     ```
+>     yarn add moment
+>     ```
+>
+> 16. **mkdirp** ——  mkdir -p 命令，递归创建目录
+>
+>     ```
+>     yarn add mkdirp
+>     ```
+>
+> 17. **node-snowflake**  ——  雪花算法
+>
+>     ```
+>     yarn add node-snowflake
+>     ```
+>
+> 18. 
 

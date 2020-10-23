@@ -45,31 +45,10 @@ exports.IsEmpty = (val) => {
  */
 exports.EmptyDefault = (val, rtVal) => {
     // console.log(typeof val)
-    if (val === null || val === undefined) {
+    if (this.IsEmpty(val)) {
         return rtVal;
     } else {
-        if (typeof val === "string") {
-            if (val === "" || val === "null" || val === "undefined") {
-                return rtVal;
-            } else {
-                return val;
-            }
-        } else if (typeof val === "number") {
-            if (isNaN(val)) {
-                return rtVal;
-            } else {
-                return val;
-            }
-        } else if (typeof val === "object") {
-            if (
-                (Array.isArray(val) && val.length === 0) ||
-                Object.keys(val).length === 0
-            ) {
-                return rtVal;
-            } else {
-                return val;
-            }
-        }
+        return val;
     }
 }
 
