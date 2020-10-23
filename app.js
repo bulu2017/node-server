@@ -1,14 +1,11 @@
-var createError = require('http-errors');
-var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var express = require('express');
+var cookieParser = require('cookie-parser'); // cookie中间件
+var logger = require('morgan'); //日志中间件
+var http = require('http');
+var createError = require('http-errors');
 
 var app = express();
-var http = require('http');
 var server = http.createServer(app);
 
 app.use(logger('dev'));
@@ -17,9 +14,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 定义路由
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var fileRouter = require('./routes/file'); // 文件上传路由
+
 app.use('/', indexRouter);
 app.use('/api', indexRouter);
 app.use('/api', usersRouter);
+app.use('/api', fileRouter);
 
 // 捕获接口异常
 app.use(function(req, res, next) {

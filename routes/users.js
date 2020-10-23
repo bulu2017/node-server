@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 //路由对象
-var user = require('../controllers/UserController');
+var { GetList, CreateUser, GetById } = require('../controllers/UserController');
 
-router.get('/user', user.GetList).post(user.Create);
-router.get('/user/:id', user.GetById);
-
+router.get('/user', GetList);
+router.get('/user/:id', GetById);
+router.post('/user', CreateUser);
 
 module.exports = router;
