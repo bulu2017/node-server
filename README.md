@@ -113,5 +113,17 @@ yarn start
 >     yarn add node-snowflake
 >     ```
 >
-> 18. 
+> 18. mssql ——  SqlServer 数据库
+>
+>     ```
+>     yarn add mssql
+>     ```
+>
+> 19. oracledb ——  Oracle 数据库
+>
+>     ```
+>     yarn add oracledb
+>     ```
+>
+> 20. 
 

@@ -6,7 +6,7 @@ module.exports = {
         secret: 'secret'
     },
     database: {
-        dbType: 'mysql'
+        dbType: 'mysql' // 需要链接的数据库类型,已引入mysql,sqlserver,oracle,pgsql组件支持
     },
     fs: {
         uploadPath: './public/uploads/', // 上传目录

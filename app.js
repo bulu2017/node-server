@@ -25,6 +25,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // // 解析 text/plain
 // app.use(bodyParser.json({type: 'text/plain'}))
 
+//允许跨域操作
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By", ' 3.2.1')
+    if (req.method == "OPTIONS") res.send(200);
+    else next();
+});
+
 // 定义路由
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');

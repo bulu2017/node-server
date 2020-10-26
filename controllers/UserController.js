@@ -1,5 +1,5 @@
 // 数据库链接对象
-let dbContext = require('../dbcontext/mysql');
+let dbFactory = require('../dbcontext/DBFactory').createFactory();
 let { IsEmpty, CheckMobile } = require('../utils/verify');
 const formidable = require('formidable');
 const moment = require('moment');
@@ -11,16 +11,23 @@ exports.GetList = (req, resp, next) => {
     if (req.query.id) {
         this.GetById(req, resp, next);
     } else {
-        var _sql = 'SELECT * FROM n_users';
-        var _sqlArr = [];
-        dbContext.sqlConnect(_sql, _sqlArr, (err, data) => {
+        dbFactory.selectAll('n_users', (err, data) => {
             if (!err) {
                 resp.status(200).json({ code: 0, msg: '查询成功', data: data })
             } else {
-                console.log(err)
                 resp.status(200).json({ code: 100, msg: '查询失败', data: null })
             }
         });
+        // var _sql = 'SELECT * FROM n_users';
+        // var _sqlArr = [];
+        // dbFactory.Execute(_sql, _sqlArr, (err, data) => {
+        //     if (!err) {
+        //         resp.status(200).json({ code: 0, msg: '查询成功', data: data })
+        //     } else {
+        //         console.log(err)
+        //         resp.status(200).json({ code: 100, msg: '查询失败', data: null })
+        //     }
+        // });
     }
 };
 /**
@@ -31,9 +38,7 @@ exports.GetById = (req, resp, next) => {
     if (!id) {
         id = req.query.id;
     }
-    var _sql = `SELECT * FROM n_users where id=?`;
-    var _sqlArr = [id];
-    dbContext.sqlConnect(_sql, _sqlArr, (err, data) => {
+    dbFactory.select('n_users', '', [id], 'where id=?', 'order by createdAt', (err, data) => {
         if (!err) {
             resp.status(200).json({ code: 0, msg: '查询成功', data: data })
         } else {
@@ -41,6 +46,16 @@ exports.GetById = (req, resp, next) => {
             resp.status(200).json({ code: 100, msg: '查询失败', data: null })
         }
     });
+    // var _sql = `SELECT * FROM n_users where id=?`;
+    // var _sqlArr = [id];
+    // dbFactory.Execute(_sql, _sqlArr, (err, data) => {
+    //     if (!err) {
+    //         resp.status(200).json({ code: 0, msg: '查询成功', data: data })
+    //     } else {
+    //         console.log(err)
+    //         resp.status(200).json({ code: 100, msg: '查询失败', data: null })
+    //     }
+    // });
 };
 /**
  * 创建用户
@@ -60,7 +75,7 @@ exports.CreateUser = (req, resp, next) => {
 
         let _sql = `insert into n_users(name,mobile,createdAt) value(?,?,?)`;
         let _sqlArr = [name, mobile, moment(new Date()).format('YYYY-MM-DD HH:mm:ss')];
-        dbContext.sqlConnect(_sql, _sqlArr, (err, data) => {
+        dbFactory.Execute(_sql, _sqlArr, (err, data) => {
             if (!err) {
                 resp.status(200).json({ code: 0, msg: '创建成功', data: data })
             } else {
