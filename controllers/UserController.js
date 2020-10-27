@@ -3,7 +3,50 @@ let dbFactory = require('../dbcontext/DBFactory').createFactory();
 let { IsEmpty, CheckMobile } = require('../utils/verify');
 const formidable = require('formidable');
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
+/**
+ * 授权登录
+ * @param {*} req 
+ * @param {*} resp 
+ * @param {*} next 
+ */
+exports.LoginAuth = (req, resp, next) => {
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+        let { username, password } = fields;
+        if (IsEmpty(username)) {
+            resp.status(200).json({ code: -1, msg: '登录账号不能为空', data: {} })
+        }
+        if (IsEmpty(password)) {
+            resp.status(200).json({ code: -1, msg: '登录密码不能为空', data: {} })
+        }
+        const _time = Math.floor(Date.now() / 1000); //秒
+
+        let _payload = {
+            // iss: 'BuluJWT', // 该JWT的签发者
+            // sub: 'bulu', //主题,该JWT所面向的用户
+            // aud: '', //受众,接收该JWT的一方
+            // iat: _time, //签发时间,在什么时候签发的
+            // exp: _time + (60 * 60), // 一小时有效,什么时候过期，这里是一个Unix时间戳(秒)
+            // nbf: _time, //生效时间
+            name: username
+        };
+        let _options = {
+            expiresIn: _time + (60 * 60)
+        };
+        //var _privateKey = fs.readFileSync('../public/keys/private.key');
+        const _privateKey = config.jwt.secret;
+        jwt.sign(_payload, _privateKey, _options, (err, token) => {
+            if (err) {
+                resp.status(200).json({ code: -1, msg: err.message, data: '' });
+            } else {
+                resp.status(200).json({ code: 0, msg: '登录成功', data: ('Bearer ' + token) });
+            }
+        });
+    });
+};
 /**
  * 获取用户信息
  */

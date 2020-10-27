@@ -125,5 +125,23 @@ yarn start
 >     yarn add oracledb
 >     ```
 >
-> 20. 
+> 20. jsonwebtoken  ——  跨域认证
+>
+>     ```
+>     yarn add jsonwebtoken
+>     ```
+>
+> 21. express-jwt   ——  解析 JWT 的中间件
+>
+>     ```
+>     yarn add express-jwt
+>     ```
+>
+> 22. log4js   ——  日志中间件
+>
+>     ```
+>     yarn add log4js
+>     ```
+>
+> 23. 
 

@@ -3,7 +3,7 @@ module.exports = {
         port: 8083
     },
     jwt: {
-        secret: 'secret'
+        secret: 'superSecretKey@345'
     },
     database: {
         dbType: 'mysql' // 需要链接的数据库类型,已引入mysql,sqlserver,oracle,pgsql组件支持
