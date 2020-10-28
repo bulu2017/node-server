@@ -143,5 +143,11 @@ yarn start
 >     yarn add log4js
 >     ```
 >
-> 23. 
+> 23. seneca-web  ——  微服务
+>
+>     ```
+>     yarn add seneca-web
+>     ```
+>
+> 24. 
 

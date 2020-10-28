@@ -9,10 +9,16 @@ const jsonwebtoken = require('jsonwebtoken');
 // let createError = require('http-errors');
 // 全局参数
 const config = require('./config');
-const _log = require('./utils/log4js')
+const log4js = require('./utils/log4js').logger('everything');
+//微服务相关
+let Seneca = require('seneca');
+let senecaWeb = require('seneca-web'); //
+let senecaAdapter = require('seneca-web-adapter-express'); //适配器
+var routes = require('./config/routes');
+let plugin = require('./config/plugin');
 
 let app = express();
-let server = http.createServer(app);
+// let server = http.createServer(app);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -62,7 +68,7 @@ app.use(expressJwt({
         return _token;
     }
 }).unless({
-    path: ['/api/user/auth'] // 指定路径不经过 Token 解析
+    path: ['/', '/error', '/api/user/auth'] // 指定路径不经过 Token 解析
 }))
 
 // 定义路由
@@ -77,16 +83,22 @@ app.use('/api', indexRouter);
 app.use('/api', usersRouter);
 app.use('/api', fileRouter);
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 /**
  * 接口地址不存储异常处理
  */
 app.use(function(req, res, next) {
+    log4js.error('接口地址不存在：', res.message);
     next(res.json({ code: 404, msg: '请求接口不存在', data: null }));
 });
 /**
  * 程序执行过程中异常处理
  */
 app.use(function(err, req, res, next) {
+    log4js.error('接口异常：', (err.code || ''), err.message);
     if (err.name === 'UnauthorizedError') {
         // console.log(err.message)
         if (err.message === 'jwt expired') {
@@ -103,6 +115,23 @@ app.use(function(err, req, res, next) {
 /**
  * 监听端口
  */
-server.listen(config.network.port, () => {
-    console.log('——————————服务已启动——————————');
-})
+// server.listen(config.network.port, () => {
+//     console.log('——————————服务已启动——————————');
+// })
+
+//微服务配置
+let senecaWebConfig = {
+    routes: routes,
+    adapter: senecaAdapter,
+    context: app
+};
+const seneca = Seneca()
+    .use(plugin)
+    .use(senecaWeb, senecaWebConfig)
+    .use('../services')
+    .ready(() => {
+        const server = seneca.export('web/context')();
+        server.listen(config.network.port, () => {
+            console.log('——————————服务已启动——————————');
+        });
+    });

@@ -1,5 +1,5 @@
 const path = require('path');
-const _log = require('log4js');
+const log4js = require('log4js');
 
 /**
  * 第一种：
@@ -16,40 +16,35 @@ const _log = require('log4js');
  *         是否替换控制台输出，当代码出现console.log，表示以日志type=console的形式输出
  *
  */
-const _logPath = path.join(__dirname, 'public\\logs\\');
-_log.levels = "DEBUG";
-_log.configure({
+const _logPath = path.join(__dirname, '../public/logs/');
+log4js.levels = "DEBUG";
+log4js.configure({
     appenders: {
+        stdout: {
+            type: 'stdout'
+        },
         everything: {
-
+            type: 'file',
+            filename: _logPath + "log-info.log",
+            backups: 3,
+            compress: true,
+            maxLogSize: 10 * 1024 * 1024
+        },
+        dateFile: {
+            type: 'dateFile',
+            filename: _logPath + "log-info.log",
+            pattern: "yyyy-MM-dd-hh",
+            compress: true,
+            backups: 10,
+            maxLogSize: 10 * 1024 * 1024
         }
     },
     categories: {
-        default: { appenders: ['everything'], level: 'debug' }
+        default: { appenders: ['everything', 'stdout'], level: 'debug' }
     }
-    // appenders: [{
-    //         type: 'console',
-    //         category: "console"
-    //     }, {
-    //         type: "file",
-    //         filename: _logPath + "log-info.log",
-    //         maxLogSize: 10 * 1024 * 1024, // = 10Mb
-    //         numBackups: 5, // keep five backup files
-    //         compress: true, // compress the backups
-    //         encoding: 'utf-8', //default "utf-8"，文件的编码
-    //         mode: parseInt('0640', 8),
-    //         flags: 'w+'
-    //     },
-    //     {
-    //         type: "dateFile",
-    //         filename: _logPath,
-    //         pattern: "yyyy-MM-dd-hh",
-    //         compress: true
-    //     },
-    //     {
-    //         type: "stdout"
-    //     }
-    // ]
 })
 
-module.exports = _log;
+exports.logger = function(name) {
+    var logger = log4js.getLogger(name);
+    return logger;
+}

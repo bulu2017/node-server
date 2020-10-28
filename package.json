@@ -28,6 +28,9 @@
         "node-snowflake": "^0.0.1",
         "oracledb": "^5.0.0",
         "pg": "^8.4.1",
-        "redis": "^3.0.2"
+        "redis": "^3.0.2",
+        "seneca": "^3.22.0",
+        "seneca-web": "^2.2.1",
+        "seneca-web-adapter-express": "^1.2.1"
     }
 }
