@@ -149,5 +149,5 @@ yarn start
 >     yarn add seneca-web
 >     ```
 >
-> 24. 
+> 24. Normalize.css -- 
 
