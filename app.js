@@ -48,6 +48,7 @@ app.all('*', function(req, res, next) {
 app.use(expressJwt({
     secret: config.jwt.secret, // 签名的密钥 或 PublicKey
     algorithms: ['HS256'],
+    credentialsRequired: false,
     getToken: function fromHeaderOrQuerystring(req) {
         let _token = null;
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -57,15 +58,21 @@ app.use(expressJwt({
         }
         if (!IsEmpty(_token)) {
             // 解析token 并且进行相关操作校验
-            jsonwebtoken.verify(_token, config.jwt.secret, (_error, data) => {
-                if (_error) {
-                    _token = null;
-                }
-                // { name: 'bulu', iat: 1603791542, exp: 3207586684 }
-
-            });
+            let data = jsonwebtoken.verify(_token, config.jwt.secret);
+            return _token
+            // jsonwebtoken.verify(_token, config.jwt.secret, (_error, data) => {
+            //     if (_error) {
+            //         _token = null;
+            //     }
+            //     let nowTime = (new Date()).getTime();
+            //     // if(nowTime-ctime<expiresIn){
+            //     //     result = data;        
+            //     // }
+            //     // { name: 'bulu', iat: 1603791542, exp: 3207586684 }
+            //     return _token;
+            // });
         }
-        return _token;
+        return null;
     }
 }).unless({
     path: ['/', '/error', '/api/user/auth'] // 指定路径不经过 Token 解析
